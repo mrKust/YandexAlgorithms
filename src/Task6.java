@@ -5,15 +5,32 @@ public class Task6 {
     public static void main(String[] args) {
 
         List<String> inputData = readData();
-        int numberOfSectors = Integer.parseInt(inputData.get(0));
         int numberOfSystems = Integer.parseInt(inputData.get(1));
-
-        int[] hardDrive = new int[numberOfSectors + 1];
         List<String> outputData = new ArrayList<>();
+        if (numberOfSystems == 0) {
+            outputData.add("0");
+        } else {
+        int numberOfSectors = countMaxValOfSector(numberOfSystems, inputData.subList(2, inputData.size()));
+        int[] hardDrive = new int[numberOfSectors + 1];
         outputData.add(Integer.toString(getNumberOfSystems(hardDrive, numberOfSystems, inputData.subList(2, inputData.size()))));
+        }
 
         writeData(outputData);
 
+    }
+
+    private static int countMaxValOfSector(int numberOfOS, List<String> inputs) {
+
+        int maxDiscSpaceVal = 0;
+
+        for (int i = 0; i < numberOfOS; i++) {
+            String[] memoryVals = inputs.get(i).split(" ");
+            int val = Integer.parseInt(memoryVals[1]);
+            if (val > maxDiscSpaceVal)
+                maxDiscSpaceVal = val;
+        }
+
+        return maxDiscSpaceVal;
     }
 
     private static int getNumberOfSystems(int[] hardDrive, int numberOfOS, List<String> inputs) {
