@@ -16,28 +16,18 @@ public class Task2 {
     }
 
     private static int getMaxSubstringLength(int numberOfChanges, String text) {
-        int maxVal = 0;
 
-        for (int i = 0; i < (text.length() - numberOfChanges ); i++) {
-            char currentChar = text.charAt(i);
-            StringBuilder tmpString = new StringBuilder(text);
-            for (int k = 1; k <= numberOfChanges; k++) {
-                tmpString.replace(i + k, i + k + 1, String.valueOf(currentChar));
-            }
-            int tmpMax = 0;
-            for (int k = 0; k < tmpString.length(); k++) {
-                if (currentChar == tmpString.charAt(k)) {
-                    tmpMax++;
-                } else {
-                    if (tmpMax > maxVal) {
-                        maxVal = tmpMax;
-                    }
-                    tmpMax = 0;
-                }
-            }
+        char[] chars = text.toCharArray();
+        int[] w = new int[26];
+        int max = 0;
+        int p = 0;
+        for (int i = 0; i < chars.length; i++) {
+            int tmp = ++w[chars[i] - 'a'];
+            max = Math.max(max, tmp);
+            if (max + numberOfChanges - 1 < i - p)
+                w[chars[p++] - 'a']--;
         }
-
-        return maxVal;
+        return chars.length - p;
     }
 
     private static List<String> readData() {

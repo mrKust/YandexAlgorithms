@@ -20,56 +20,42 @@ public class Task4 {
 
     public static String rightPlace(int numberOfStudents, int numberOfVariants, int petyaRow, int petyaSide) {
 
-        int numberOfRows = (int)(Math.ceil((double)numberOfStudents / 2));
-
-        int[][] classMap = new int[numberOfRows + 1][2];
-        int currentVariant = 1;
-        int studentsWorks = numberOfStudents;
-        for (int i = 1; i <= numberOfRows; i++) {
-            for (int k = 1; k >= 0; k--) {
-                classMap[i][k] = currentVariant;
-                currentVariant++;
-                if (currentVariant > numberOfVariants)
-                    currentVariant = 1;
-                studentsWorks--;
-                if (studentsWorks == 0)
-                    break;
+        int odd = numberOfVariants % 2;
+        int nextRow = petyaRow + numberOfVariants / 2;
+        int prevRow = petyaRow - numberOfVariants / 2;
+        int nextPosition = petyaSide;
+        int prevPosition = petyaSide;
+        if (odd == 1) {
+            if (petyaSide + 1 > 2) {
+                nextRow++;
+                nextPosition = 1;
+            } else {
+                nextPosition = 2;
+            }
+            if (petyaSide - 1 < 1) {
+                prevRow--;
+                prevPosition = 2;
+            } else {
+                prevPosition = 1;
             }
         }
-        int petyaVariant = 0 ;
-        if (petyaSide == 1) {
-            petyaVariant = classMap[petyaRow][1];
-        } else  petyaVariant = classMap[petyaRow][0];
+        boolean prevValid = prevRow > 0;
+        boolean nextValid = (nextRow - 1) * 2 + nextPosition - 1 < numberOfStudents;
 
-        int vasyaRow = -1;
-        int vasyaSide = -1;
-
-        for (int i = 1; i <= numberOfRows; i++) {
-            for (int k = 1; k >= 0; k--) {
-                if (petyaRow == i)
-                    continue;
-                int tmpVar = classMap[i][k];
-                if ( (tmpVar == petyaVariant) && (vasyaRow != -1) ) {
-                    int tmpNumberRows = Math.abs(petyaRow - i);
-                    int currentMinNumberRows = Math.abs(petyaRow - vasyaRow);
-                    if (tmpNumberRows <= currentMinNumberRows) {
-                        vasyaRow = i;
-                        if (k == 1)
-                            vasyaSide = 1;
-                        else vasyaSide = 2;
-                    }
-                } else if (tmpVar == petyaVariant) {
-                    vasyaRow = i;
-                    if (k == 1)
-                        vasyaSide = 1;
-                    else vasyaSide = 2;
-                }
+        if (prevValid && nextValid) {
+            int dPrev = petyaRow - prevRow;
+            int dNext = nextRow - petyaRow;
+            if (dPrev < dNext) {
+                return prevRow + " " + prevPosition;
+            } else {
+                return nextRow + " " + nextPosition;
             }
+        } else if (!prevValid && nextValid) {
+            return nextRow + " " + nextPosition;
+        } else if (prevValid) {
+            return prevRow + " " + prevPosition;
         }
-
-        if ( (vasyaRow == -1) && (vasyaSide == -1) )
-            return "-1";
-        else return vasyaRow + " " + vasyaSide;
+        return "-1";
     }
 
     private static List<String> readData() {
