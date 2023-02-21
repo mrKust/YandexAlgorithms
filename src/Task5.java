@@ -6,9 +6,9 @@ public class Task5 {
 
         List<String> inputData = readData();
         int numberOfLetters = Integer.parseInt(inputData.get(0));
-        int[] amountOfLetters = new int[numberOfLetters + 1];
-        for (int i = 1; i <= numberOfLetters; i++) {
-            amountOfLetters[i] = Integer.parseInt(inputData.get(i));
+        int[] amountOfLetters = new int[numberOfLetters];
+        for (int i = 0; i < numberOfLetters; i++) {
+            amountOfLetters[i] = Integer.parseInt(inputData.get(i + 1));
         }
 
 
@@ -20,11 +20,13 @@ public class Task5 {
     }
 
     public static String countMax(int[] amountOfLetters) {
-        int summaryAmount = 0;
+        long summaryAmount = 0;
 
+        for (int i = 0; i < amountOfLetters.length - 1; i++) {
+            summaryAmount += Math.min(amountOfLetters[i], amountOfLetters[i + 1]);
+        }
 
-
-        return "";
+        return String.valueOf(summaryAmount);
     }
 
     private static List<String> readData() {
