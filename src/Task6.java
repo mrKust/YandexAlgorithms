@@ -5,68 +5,43 @@ public class Task6 {
     public static void main(String[] args) {
 
         List<String> inputData = readData();
+        int numberOfSectors = Integer.parseInt(inputData.get(0));
         int numberOfSystems = Integer.parseInt(inputData.get(1));
         List<String> outputData = new ArrayList<>();
         if (numberOfSystems == 0) {
             outputData.add("0");
         } else {
-        int numberOfSectors = countMaxValOfSector(numberOfSystems, inputData.subList(2, inputData.size()));
-        int[] hardDrive = new int[numberOfSectors + 1];
-        outputData.add(Integer.toString(getNumberOfSystems(hardDrive, numberOfSystems, inputData.subList(2, inputData.size()))));
+            outputData.add(String.valueOf(countNumberOfOS(numberOfSectors, numberOfSystems, inputData.subList(2, inputData.size()))));
         }
 
         writeData(outputData);
 
     }
 
-    private static int countMaxValOfSector(int numberOfOS, List<String> inputs) {
+    private static int countNumberOfOS(int numberOfSectors, int numberOfSystems, List<String> sectorsData) {
+        class Segment {
+            private int start;
+            private int finish;
 
-        int maxDiscSpaceVal = 0;
-
-        for (int i = 0; i < numberOfOS; i++) {
-            String[] memoryVals = inputs.get(i).split(" ");
-            int val = Integer.parseInt(memoryVals[1]);
-            if (val > maxDiscSpaceVal)
-                maxDiscSpaceVal = val;
-        }
-
-        return maxDiscSpaceVal;
-    }
-
-    private static int getNumberOfSystems(int[] hardDrive, int numberOfOS, List<String> inputs) {
-        int installedOS = 1;
-
-        for (int i = 0; i < numberOfOS; i++) {
-            String[] memoryVals = inputs.get(i).split(" ");
-            int start = Integer.parseInt(memoryVals[0]);
-            if (hardDrive[start] != 0) {
-                replaceAll(hardDrive, hardDrive[start]);
+            Segment(int start, int finish) {
+                this.start = start;
+                this.finish = finish;
             }
-            int end = Integer.parseInt(memoryVals[1]);
-            if (hardDrive[end] != 0) {
-                replaceAll(hardDrive, hardDrive[end]);
-            }
-            for (int k = start; k <= end; k++) {
-                hardDrive[k] = installedOS;
-            }
-            installedOS++;
         }
 
-        Set<Integer> countSymbols = new HashSet<>();
-        for (int i = 0; i < hardDrive.length; i++) {
-            int tmp = hardDrive[i];
-            countSymbols.add(tmp);
-        }
-        countSymbols.remove(0);
+        List<Segment> aliveSystems = new ArrayList<>();
 
-        return countSymbols.size();
-    }
-
-    private static void replaceAll(int[] input, int oldVal) {
-        for (int i = 0; i < input.length; i++) {
-            if (input[i] == oldVal)
-                input[i] = 0;
+        for (String tmp : sectorsData) {
+            String[] tmpArray = tmp.split(" ");
+            int startSegment = Integer.parseInt(tmpArray[0]);
+            int endSegment = Integer.parseInt(tmpArray[1]);
+            Segment currentSegment = new Segment(startSegment, endSegment);
+            aliveSystems.removeIf(checkSegment -> (checkSegment.start <= currentSegment.finish) && (currentSegment.start <= checkSegment.finish));
+            aliveSystems.add(currentSegment);
         }
+
+
+        return aliveSystems.size();
     }
 
     private static List<String> readData() {
