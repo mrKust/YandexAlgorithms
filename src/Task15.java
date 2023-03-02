@@ -31,34 +31,32 @@ public class Task15 {
         }
 
         Stack<Pair> helper = new Stack<>();
-        Map<Integer, Integer> finalDistanation = new HashMap<>(numberOfTowns);
+        int[] finalDistanation = new int[numberOfTowns];
 
         for (int i = 0; i < numberOfTowns; i++) {
-            finalDistanation.put(i, -1);
+            finalDistanation[i] = -1;
         }
 
         for (int i = 0; i < numberOfTowns; i++) {
 
             Pair currentPair = new Pair(i, moneyToLiveInTown.get(i));
-            if (helper.isEmpty()) {
-                helper.push(currentPair);
-                continue;
-            }
 
-            Pair checkVal = helper.peek();
-            while (currentPair.value < checkVal.value) {
-                finalDistanation.put(checkVal.index, currentPair.index);
-                helper.pop();
-                if (helper.isEmpty())
-                    break;
-                checkVal = helper.peek();
+            if (!helper.isEmpty()) {
+                Pair checkVal = helper.peek();
+                while (currentPair.value < checkVal.value) {
+                    finalDistanation[checkVal.index] = currentPair.index;
+                    helper.pop();
+                    if (helper.isEmpty())
+                        break;
+                    checkVal = helper.peek();
+                }
             }
             helper.push(currentPair);
         }
 
         StringBuilder result = new StringBuilder();
-        for (Map.Entry<Integer, Integer> tmp : finalDistanation.entrySet()) {
-            result.append(tmp.getValue());
+        for (int i = 0; i < numberOfTowns; i++) {
+            result.append(finalDistanation[i]);
             result.append(" ");
         }
 
