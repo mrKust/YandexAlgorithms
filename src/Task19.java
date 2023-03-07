@@ -43,7 +43,15 @@ public class Task19 {
     }
 
     private static void insert(int inputVal, Node root) {
-        
+        if (inputVal <= root.val) {
+            if (root.left == null) {
+                root.left = new Node(inputVal);
+            } else insert(inputVal, root.left);
+        } else {
+            if (root.right == null) {
+                root.right = new Node(inputVal);
+            } else insert(inputVal, root.right);
+        }
     }
 
     private static List<String> readData() {
